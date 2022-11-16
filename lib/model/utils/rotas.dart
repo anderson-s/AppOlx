@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:olx/view/tela_anuncios.dart';
 import 'package:olx/view/tela_inicio.dart';
 import 'package:olx/view/tela_login.dart';
+import 'package:olx/view/tela_novo_anuncio.dart';
 
 class Rotas {
   static Route<dynamic> gerar(RouteSettings settings) {
@@ -10,6 +12,10 @@ class Rotas {
         return MaterialPageRoute(builder: (_) => const TelaInicio());
       case "login":
         return MaterialPageRoute(builder: (_) => const TelaLogin());
+      case "/meus_anuncios":
+        return MaterialPageRoute(builder: (_) => const TelaAnuncios());
+      case "/novo_anuncio":
+        return MaterialPageRoute(builder: (_) => const TelaNovoAnuncio());
       default:
         return _errorRota();
     }
