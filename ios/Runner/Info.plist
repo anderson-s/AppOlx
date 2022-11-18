@@ -4,6 +4,18 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Acessar Biblioteca</string>
+
+	<key>NSCameraUsageDescription</key>
+	<string>Acessar Camera</string>
+
+
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Acessar Microfone</string>
+
+
 	<key>CFBundleDisplayName</key>
 	<string>Olx</string>
 	<key>CFBundleExecutable</key>

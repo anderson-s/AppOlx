@@ -1,9 +1,9 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:olx/view/components/botao_customizado.dart';
 import 'package:olx/view/components/input_form.dart';
 
@@ -23,7 +23,17 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
     if (_formKey.currentState!.validate()) {}
   }
 
-  _pegarImagem() {}
+  _pegarImagem() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? imageSelecionada =
+        await picker.pickImage(source: ImageSource.gallery);
+
+    if (imageSelecionada != null) {
+      setState(() {
+        imagens.add(File(imageSelecionada.path));
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +91,58 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
                                   ),
                                 );
                                 // return Text("data");
+                              }
+                              if (imagens.isNotEmpty) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return Dialog(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Image.file(imagens[index]),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      imagens.removeAt(index);
+                                                    });
+                                                    Navigator.of(context);
+                                                  },
+                                                  child: const Text(
+                                                    "Remover",
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 50,
+                                      backgroundImage:
+                                          FileImage(imagens[index]),
+                                      child: Container(
+                                        color: const Color.fromRGBO(
+                                            255, 255, 255, 0.4),
+                                        alignment: Alignment.center,
+                                        child: const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
                               }
                               return Container();
                             },
