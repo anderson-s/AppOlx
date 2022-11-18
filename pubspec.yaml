@@ -41,6 +41,7 @@ dependencies:
   firebase_storage: ^10.3.8
   firebase_auth: ^3.9.0
   brasil_fields: ^1.6.0
+  image_picker: ^0.8.6
 
 dev_dependencies:
   flutter_test:

@@ -14,11 +14,16 @@ class BotaoCustomizado extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: funcao,
-      style: const ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll(
+      style: ButtonStyle(
+        shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+        ),
+        backgroundColor: const MaterialStatePropertyAll(
           Color(0xff9c27b0),
         ),
-        padding: MaterialStatePropertyAll(
+        padding: const MaterialStatePropertyAll(
           EdgeInsets.fromLTRB(32, 16, 32, 16),
         ),
       ),

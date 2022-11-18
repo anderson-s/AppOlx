@@ -23,7 +23,7 @@ class _TelaLoginState extends State<TelaLogin> {
           try {
             await Controller().cadastrar(_email.text, _senha.text).then(
                   (value) =>
-                      Navigator.restorablePushReplacementNamed(context, "/"),
+                      Navigator.pushNamed(context, "/"),
                 );
           } catch (error) {
             return error;
@@ -58,7 +58,7 @@ class _TelaLoginState extends State<TelaLogin> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Image.asset(
-                  "logo.png",
+                  "assets/logo.png",
                   height: 100,
                   width: 125,
                 ),
