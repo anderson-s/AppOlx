@@ -42,6 +42,7 @@ dependencies:
   firebase_auth: ^3.9.0
   brasil_fields: ^1.6.0
   image_picker: ^0.8.6
+  validadores: ^1.0.5
 
 dev_dependencies:
   flutter_test:

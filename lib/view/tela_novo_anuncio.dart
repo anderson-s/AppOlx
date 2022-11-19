@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:olx/view/components/botao_customizado.dart';
 import 'package:olx/view/components/input_form.dart';
+import 'package:validadores/validadores.dart';
 
 class TelaNovoAnuncio extends StatefulWidget {
   const TelaNovoAnuncio({super.key});
@@ -17,8 +18,15 @@ class TelaNovoAnuncio extends StatefulWidget {
 class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
   final _formKey = GlobalKey<FormState>();
   List<File> imagens = [];
-  String dropdownValue = Estados.listaEstadosSigla[0];
-
+  String dropdownValueEstados = "";
+  String dropdownValueCategoria = "";
+  List<String> categorias = [
+    "Automóvel",
+    "Imóvel",
+    "Eletrônico",
+    "Moda",
+    "Esportes",
+  ];
   _validarcampos() {
     if (_formKey.currentState!.validate()) {}
   }
@@ -149,20 +157,18 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
                           ),
                         ),
                         if (state.hasError)
-                          Container(
-                            child: Text(
-                              "[${state.errorText}]",
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 14,
-                              ),
+                          Text(
+                            "[${state.errorText}]",
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 14,
                             ),
                           )
                       ],
                     );
                   },
                   validator: (imgs) {
-                    if (imgs!.length == 0) {
+                    if (imgs!.isEmpty) {
                       return "Necessário selecionar uma imagem!";
                     }
                     return null;
@@ -170,52 +176,130 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
                 ),
                 Row(
                   children: [
-                    DropdownButton<String>(
-                      value: dropdownValue,
-                      icon: const Icon(Icons.arrow_downward_outlined),
-                      elevation: 16,
-                      onChanged: (String? value) {
-                        setState(() {
-                          dropdownValue = value!;
-                        });
-                      },
-                      items: Estados.listaEstadosSigla
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DropdownButtonFormField(
+                          items: Estados.listaEstadosSigla
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              dropdownValueEstados = value!;
+                            });
+                          },
+                          validator: (value) {
+                            return Validador()
+                                .add(Validar.OBRIGATORIO,
+                                    msg: "Campo obrigatório")
+                                .valido(value);
+                          },
+                          hint: const Text("Estados"),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DropdownButtonFormField(
+                          items: categorias
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              dropdownValueCategoria = value!;
+                            });
+                          },
+                          validator: (value) {
+                            return Validador()
+                                .add(Validar.OBRIGATORIO,
+                                    msg: "Campo obrigatório")
+                                .valido(value);
+                          },
+                          hint: const Text("Categorias"),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                const InputForm(
-                  tipo: TextInputType.text,
-                  formato: [],
-                  nomeCampo: "Titulo",
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: InputForm(
+                    validar: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .valido(value);
+                    },
+                    tipo: TextInputType.text,
+                    formato: [],
+                    nomeCampo: "Titulo",
+                  ),
                 ),
-                InputForm(
-                  tipo: TextInputType.number,
-                  formato: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    RealInputFormatter(),
-                  ],
-                  nomeCampo: "Preço",
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InputForm(
+                    validar: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .valido(value);
+                    },
+                    tipo: TextInputType.number,
+                    formato: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      RealInputFormatter(),
+                    ],
+                    nomeCampo: "Preço",
+                  ),
                 ),
-                InputForm(
-                  tipo: TextInputType.number,
-                  formato: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    TelefoneInputFormatter(),
-                  ],
-                  nomeCampo: "Telefone",
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InputForm(
+                    validar: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .valido(value);
+                    },
+                    tipo: TextInputType.phone,
+                    formato: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      TelefoneInputFormatter(),
+                    ],
+                    nomeCampo: "Telefone",
+                  ),
                 ),
-                const InputForm(
-                  tipo: TextInputType.text,
-                  formato: [],
-                  nomeCampo: "Descrição",
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InputForm(
+                    tipo: TextInputType.text,
+                    validar: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .valido(value);
+                    },
+                    formato: [],
+                    nomeCampo: "Descrição",
+                  ),
                 ),
-                BotaoCustomizado(funcao: _validarcampos, texto: "Cadastrar")
+                BotaoCustomizado(
+                  funcao: _validarcampos,
+                  texto: "Cadastrar",
+                ),
               ],
             ),
           ),
