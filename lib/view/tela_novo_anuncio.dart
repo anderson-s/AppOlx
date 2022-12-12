@@ -59,7 +59,7 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
       anuncio.sFotos = urls;
       await Controller().salvarDadosAnuncios(anuncio.toMap()).then((value) {
         Navigator.pop(_dialogContext);
-        Navigator.pushReplacementNamed(context, "/meus_anuncios");
+        Navigator.pop(context);
       });
     } catch (error) {
       Navigator.pop(_dialogContext);
