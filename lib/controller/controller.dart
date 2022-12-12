@@ -52,4 +52,28 @@ class Controller {
         .doc(map["id"])
         .set(map);
   }
+
+  Future<Stream<QuerySnapshot<Object?>>> carregarAnuncio() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User user = auth.currentUser!;
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Stream<QuerySnapshot> stream = db
+        .collection("meus_anuncios")
+        .doc(user.uid)
+        .collection("anuncios")
+        .snapshots();
+    return stream;
+  }
+
+  Future removerAnuncio(String idAnuncio) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User user = auth.currentUser!;
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db
+        .collection("meus_anuncios")
+        .doc(user.uid)
+        .collection("anuncios")
+        .doc(idAnuncio)
+        .delete();
+  }
 }

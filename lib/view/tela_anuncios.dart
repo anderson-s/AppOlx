@@ -1,4 +1,9 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:olx/controller/controller.dart';
+import 'package:olx/model/anuncio.dart';
 import 'package:olx/view/components/itens_anuncios.dart';
 
 class TelaAnuncios extends StatefulWidget {
@@ -9,6 +14,28 @@ class TelaAnuncios extends StatefulWidget {
 }
 
 class _TelaAnunciosState extends State<TelaAnuncios> {
+  final _controller = StreamController<QuerySnapshot>.broadcast();
+  final _carregar = Center(
+    child: Column(
+      children: const [
+        Text("Carregando anúncios"),
+        CircularProgressIndicator()
+      ],
+    ),
+  );
+  carregar() async {
+    Stream<QuerySnapshot> stream = await Controller().carregarAnuncio();
+    stream.listen((dados) {
+      _controller.add(dados);
+    });
+  }
+
+  @override
+  void initState() {
+    carregar();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,10 +48,67 @@ class _TelaAnunciosState extends State<TelaAnuncios> {
         },
         child: const Icon(Icons.add),
       ),
-      body: ListView.builder(
-        itemCount: 5,
-        itemBuilder: (_, index) {
-          return ItensAnuncios();
+      body: StreamBuilder(
+        stream: _controller.stream,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return _carregar;
+            case ConnectionState.active:
+            case ConnectionState.done:
+              if (snapshot.hasError) {
+                return const Text("Erro ao carregar os dados!");
+              }
+              QuerySnapshot<Object?> querySnapshot = snapshot.data!;
+              return ListView.builder(
+                itemCount: querySnapshot.docs.length,
+                itemBuilder: (_, index) {
+                  List<DocumentSnapshot> anuncios = querySnapshot.docs.toList();
+                  DocumentSnapshot docsSnapshot = anuncios[index];
+                  Anuncio anuncio = Anuncio.carregarDados(docsSnapshot);
+                  return ItensAnuncios(
+                    anuncio: anuncio,
+                    onPressedRemover: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text("Confirmar"),
+                              content: const Text(
+                                  "Deseja realmente excluir o anúncio?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    "Cancelar",
+                                    style: TextStyle(
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Controller().removerAnuncio(anuncio.id);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    "Remover",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          });
+                    },
+                  );
+                },
+              );
+          }
         },
       ),
     );

@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:olx/model/anuncio.dart';
 
+// ignore: must_be_immutable
 class ItensAnuncios extends StatelessWidget {
-  const ItensAnuncios({super.key});
-
+  Anuncio anuncio;
+  VoidCallback? onTapItem;
+  VoidCallback? onPressedRemover;
+  ItensAnuncios({
+    super.key,
+    required this.anuncio,
+    this.onTapItem,
+    this.onPressedRemover,
+  });
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onTapItem,
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -15,8 +24,9 @@ class ItensAnuncios extends StatelessWidget {
               SizedBox(
                 width: 120,
                 height: 120,
-                child: Container(
-                  color: Colors.orange,
+                child: Image.network(
+                  anuncio.fotos[0],
+                  fit: BoxFit.cover,
                 ),
               ),
               Expanded(
@@ -26,34 +36,35 @@ class ItensAnuncios extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
-                        "Video Game Nintendo 64",
-                        style: TextStyle(
+                        anuncio.titulo,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text("R\$ 1.200,80"),
+                      Text("R\$ ${anuncio.preco}"),
                     ],
                   ),
                 ),
               ),
-              Expanded(
-                flex: 1,
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      Colors.red,
+              if (onPressedRemover != null)
+                Expanded(
+                  flex: 1,
+                  child: OutlinedButton(
+                    onPressed: onPressedRemover,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Colors.red,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.delete,
+                      color: Colors.white,
                     ),
                   ),
-                  child: const Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                  ),
                 ),
-              ),
             ],
           ),
         ),

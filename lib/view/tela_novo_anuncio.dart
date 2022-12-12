@@ -94,7 +94,7 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
   @override
   void initState() {
     super.initState();
-    anuncio = Anuncio();
+    anuncio = Anuncio.gerarId();
   }
 
   @override

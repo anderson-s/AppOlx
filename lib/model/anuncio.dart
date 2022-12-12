@@ -9,7 +9,20 @@ class Anuncio {
   late String _telefone;
   late String _descricao;
   late List<String> _fotos;
-  Anuncio() {
+
+  Anuncio();
+  Anuncio.carregarDados(DocumentSnapshot documentSnapshot) {
+    _id = documentSnapshot.id;
+    _estado = documentSnapshot["categoria"];
+    _descricao = documentSnapshot["descricao"];
+    _estado = documentSnapshot["estado"];
+    _fotos = List<String>.from(documentSnapshot["fotos"]);
+    _preco = documentSnapshot["preco"];
+    _telefone = documentSnapshot["telefone"];
+    _titulo = documentSnapshot["titulo"];
+  }
+
+  Anuncio.gerarId() {
     FirebaseFirestore db = FirebaseFirestore.instance;
     CollectionReference colecao = db.collection("MeusAnuncios");
     _id = colecao.doc().id;
