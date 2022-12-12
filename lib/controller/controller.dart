@@ -45,12 +45,19 @@ class Controller {
     FirebaseAuth auth = FirebaseAuth.instance;
     User user = auth.currentUser!;
     FirebaseFirestore db = FirebaseFirestore.instance;
+    //Meus Anuncios
     db
         .collection("meus_anuncios")
         .doc(user.uid)
         .collection("anuncios")
         .doc(map["id"])
-        .set(map);
+        .set(map)
+        .then(
+      (value) {
+        //Anuncios Publicos
+        db.collection("anuncios").doc(map["id"]).set(map);
+      },
+    );
   }
 
   Future<Stream<QuerySnapshot<Object?>>> carregarAnuncio() async {
@@ -74,6 +81,9 @@ class Controller {
         .doc(user.uid)
         .collection("anuncios")
         .doc(idAnuncio)
-        .delete();
+        .delete()
+        .then((_) {
+      db.collection("anuncios").doc(idAnuncio).delete();
+    });
   }
 }
