@@ -6,12 +6,13 @@ class InputForm extends StatelessWidget {
   final TextInputType tipo;
   final List<TextInputFormatter> formato;
   final String? Function(String?)? validar;
+  final Function(String?)? salvar;
   const InputForm(
       {super.key,
       required this.nomeCampo,
       required this.tipo,
       required this.formato,
-      required this.validar,
+      required this.validar, required this.salvar,
       });
 
   @override
@@ -20,6 +21,7 @@ class InputForm extends StatelessWidget {
       inputFormatters: formato,
       validator: validar,
       keyboardType: tipo,
+      onSaved: salvar,
       decoration: InputDecoration(
         labelText: nomeCampo,
         border: OutlineInputBorder(

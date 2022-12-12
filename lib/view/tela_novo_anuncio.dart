@@ -4,6 +4,8 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:olx/controller/controller.dart';
+import 'package:olx/model/anuncio.dart';
 import 'package:olx/view/components/botao_customizado.dart';
 import 'package:olx/view/components/input_form.dart';
 import 'package:validadores/validadores.dart';
@@ -18,6 +20,7 @@ class TelaNovoAnuncio extends StatefulWidget {
 class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
   final _formKey = GlobalKey<FormState>();
   List<File> imagens = [];
+  late Anuncio anuncio;
   String dropdownValueEstados = "";
   String dropdownValueCategoria = "";
   List<String> categorias = [
@@ -27,8 +30,17 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
     "Moda",
     "Esportes",
   ];
+  _salvarAnuncio() async {
+    await Controller().uploadImagem(imagens, anuncio.id);
+  }
+
   _validarcampos() {
-    if (_formKey.currentState!.validate()) {}
+    if (_formKey.currentState!.validate()) {
+      //Salvando campos
+      _formKey.currentState!.save();
+      //Salvando anuncio
+      _salvarAnuncio();
+    }
   }
 
   _pegarImagem() async {
@@ -41,6 +53,12 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
         imagens.add(File(imageSelecionada.path));
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    anuncio = Anuncio();
   }
 
   @override
@@ -62,7 +80,7 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
                   builder: (state) {
                     return Column(
                       children: [
-                        Container(
+                        SizedBox(
                           height: 100,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -199,6 +217,9 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
                                 .valido(value);
                           },
                           hint: const Text("Estados"),
+                          onSaved: (estado) {
+                            anuncio.sEstado = estado!;
+                          },
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -222,6 +243,9 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
                               dropdownValueCategoria = value!;
                             });
                           },
+                          onSaved: (categoria) {
+                            anuncio.scategoria = categoria!;
+                          },
                           validator: (value) {
                             return Validador()
                                 .add(Validar.OBRIGATORIO,
@@ -239,21 +263,27 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: InputForm(
                     validar: (value) {
                       return Validador()
                           .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
                           .valido(value);
                     },
+                    salvar: (titulo) {
+                      anuncio.stitulo = titulo!;
+                    },
                     tipo: TextInputType.text,
-                    formato: [],
+                    formato: const [],
                     nomeCampo: "Titulo",
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: InputForm(
+                    salvar: (preco) {
+                      anuncio.sPreco = preco!;
+                    },
                     validar: (value) {
                       return Validador()
                           .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
@@ -275,6 +305,9 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
                           .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
                           .valido(value);
                     },
+                    salvar: (telefone) {
+                      anuncio.sTelefone = telefone!;
+                    },
                     tipo: TextInputType.phone,
                     formato: [
                       FilteringTextInputFormatter.digitsOnly,
@@ -286,13 +319,16 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: InputForm(
+                    salvar: (descricao) {
+                      anuncio.sDescricao = descricao!;
+                    },
                     tipo: TextInputType.text,
                     validar: (value) {
                       return Validador()
                           .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
                           .valido(value);
                     },
-                    formato: [],
+                    formato: const [],
                     nomeCampo: "Descrição",
                   ),
                 ),
