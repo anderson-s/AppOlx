@@ -16,6 +16,20 @@ class Anuncio {
     _fotos = [];
   }
 
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {
+      "id": _id,
+      "estado": _estado,
+      "categoria": _categoria,
+      "titulo": _titulo,
+      "preco": _preco,
+      "telefone": _telefone,
+      "descricao": _descricao,
+      "fotos": _fotos,
+    };
+    return map;
+  }
+
   String get id {
     return _id;
   }

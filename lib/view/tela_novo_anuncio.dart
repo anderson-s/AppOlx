@@ -21,6 +21,8 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
   final _formKey = GlobalKey<FormState>();
   List<File> imagens = [];
   late Anuncio anuncio;
+  late BuildContext _dialogContext;
+
   String dropdownValueEstados = "";
   String dropdownValueCategoria = "";
   List<String> categorias = [
@@ -30,12 +32,46 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
     "Moda",
     "Esportes",
   ];
+  _abrirModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              CircularProgressIndicator(),
+              SizedBox(
+                height: 20,
+              ),
+              Text("Salvando anúncio...")
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   _salvarAnuncio() async {
-    await Controller().uploadImagem(imagens, anuncio.id);
+    _abrirModal(_dialogContext);
+    try {
+      List<String> urls = await Controller().uploadImagem(imagens, anuncio.id);
+      anuncio.sFotos = urls;
+      await Controller().salvarDadosAnuncios(anuncio.toMap()).then((value) {
+        Navigator.pop(_dialogContext);
+        Navigator.pushReplacementNamed(context, "/meus_anuncios");
+      });
+    } catch (error) {
+      Navigator.pop(_dialogContext);
+    }
   }
 
   _validarcampos() {
     if (_formKey.currentState!.validate()) {
+      //Usando o context
+      setState(() {
+        _dialogContext = context;
+      });
       //Salvando campos
       _formKey.currentState!.save();
       //Salvando anuncio
