@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:olx/controller/controller.dart';
 import 'package:olx/model/anuncio.dart';
 import 'package:olx/view/components/botao_customizado.dart';
+import 'package:olx/view/components/drop_itens.dart';
 import 'package:olx/view/components/input_form.dart';
 import 'package:validadores/validadores.dart';
 
@@ -232,67 +233,22 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DropdownButtonFormField(
-                          items: Estados.listaEstadosSigla
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (String? value) {
-                            setState(() {
-                              dropdownValueEstados = value!;
-                            });
-                          },
-                          validator: (value) {
-                            return Validador()
-                                .add(Validar.OBRIGATORIO,
-                                    msg: "Campo obrigatório")
-                                .valido(value);
-                          },
-                          hint: const Text("Estados"),
-                          onSaved: (estado) {
-                            anuncio.sEstado = estado!;
-                          },
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
+                        padding: const EdgeInsets.all(
+                          8.0,
+                        ),
+                        child: ConfiguracoesItensDrop().retornarDropEstados(
+                          (String? value) => dropdownValueEstados = value!,
+                          (estado) => anuncio.sEstado = estado!,
                         ),
                       ),
                     ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: DropdownButtonFormField(
-                          items: categorias
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (String? value) {
-                            setState(() {
-                              dropdownValueCategoria = value!;
-                            });
-                          },
-                          onSaved: (categoria) {
+                        child: ConfiguracoesItensDrop().retornarDropCategorias(
+                          (categoria) {
                             anuncio.scategoria = categoria!;
                           },
-                          validator: (value) {
-                            return Validador()
-                                .add(Validar.OBRIGATORIO,
-                                    msg: "Campo obrigatório")
-                                .valido(value);
-                          },
-                          hint: const Text("Categorias"),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
                         ),
                       ),
                     ),
