@@ -239,6 +239,7 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
                         child: ConfiguracoesItensDrop().retornarDropEstados(
                           (String? value) => dropdownValueEstados = value!,
                           (estado) => anuncio.sEstado = estado!,
+                          0,
                         ),
                       ),
                     ),
@@ -246,10 +247,9 @@ class _TelaNovoAnuncioState extends State<TelaNovoAnuncio> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ConfiguracoesItensDrop().retornarDropCategorias(
-                          (categoria) {
-                            anuncio.scategoria = categoria!;
-                          },
-                        ),
+                            (categoria) {
+                          anuncio.scategoria = categoria!;
+                        }, 0),
                       ),
                     ),
                   ],

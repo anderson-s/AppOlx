@@ -30,76 +30,103 @@ class ConfiguracoesItensDrop {
     },
   ).toList();
 
-  retornarDropCategorias(Function(String?)? salvar) {
-    return DropdownButtonFormField(
-      items: categorias.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(
-            value,
-            style: TextStyle(
-              color:
-                  value == "Categoria" ? const Color(0xff9c27b0) : Colors.black,
-              fontSize: 20,
-            ),
-          ),
-        );
-      }).toList(),
-      onChanged: (String? value) {
-        dropdownValueCategoria = value!;
-      },
-      onSaved: salvar,
-      validator: (value) {
-        return Validador()
-            .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
-            .valido(value);
-      },
-      hint: const Text(
-        "Categoria",
-        style: TextStyle(
-          color: Color(0xff9c27b0),
-        ),
-      ),
+  List<DropdownMenuItem<String>> listDropCategoriasItens = [  "Categoria",
+    "Automóvel",
+    "Imóvel",
+    "Eletrônico",
+    "Moda",
+    "Esportes",].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    color: value == "Categoria"
+                        ? const Color(0xff9c27b0)
+                        : Colors.black,
+                    fontSize: 20,
+                  ),
+                ),
+              );
+            }).toList();
+
+  hintText(String texto) {
+    return Text(
+      texto,
       style: const TextStyle(
-        color: Colors.black,
+        color: Color(0xff9c27b0),
         fontSize: 20,
       ),
     );
   }
 
+  retornarDropCategorias(Function(String?)? salvar, int opcao,
+      [String? valor, Function(String?)? onChanged]) {
+    return opcao == 0
+        ? DropdownButtonFormField(
+            items: listDropCategoriasItens,
+            onChanged: (String? value) {
+              dropdownValueCategoria = value!;
+            },
+            onSaved: salvar,
+            validator: (value) {
+              return Validador()
+                  .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                  .valido(value);
+            },
+            hint: hintText("Categoria"),
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+            ),
+          )
+        : DropdownButtonHideUnderline(
+            child: Center(
+              child: DropdownButton(
+                iconEnabledColor: const Color(0xff9c27b0),
+                items: listDropCategoriasItens,
+                onChanged: onChanged,
+                hint: hintText("Categorias"),
+                value: valor!,
+              ),
+            ),
+          );
+  }
+
   retornarDropEstados(
-    Function(String?)? mudar,
-    Function(String?)? salvar,
-  ) {
+      Function(String?)? mudar, Function(String?)? salvar, int opcao,
+      [String? valor]) {
+    final texto = hintText("Região");
     listDropEstadosItens.insert(
       0,
-      const DropdownMenuItem(
-        value: null,
-        child: Text(
-          "Região",
-          style: TextStyle(
-            color: Color(0xff9c27b0),
-            fontSize: 20,
-          ),
-        ),
+      DropdownMenuItem(
+        value: "null",
+        child: texto,
       ),
     );
-    return DropdownButtonFormField(
-      items: listDropEstadosItens,
-      onChanged: mudar,
-      validator: (value) {
-        return Validador()
-            .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
-            .valido(value);
-      },
-      hint: const Text(
-        "Região",
-        style: TextStyle(
-          color: Color(0xff9c27b0),
-          fontSize: 20,
-        ),
-      ),
-      onSaved: salvar,
-    );
+
+    return opcao == 0
+        ? DropdownButtonFormField(
+            items: listDropEstadosItens,
+            onChanged: mudar,
+            validator: (value) {
+              return Validador()
+                  .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                  .valido(value);
+            },
+            hint: texto,
+            onSaved: salvar,
+          )
+        : DropdownButtonHideUnderline(
+            child: Center(
+              child: DropdownButton(
+                iconEnabledColor: const Color(0xff9c27b0),
+                items: listDropEstadosItens,
+                onChanged: mudar,
+                hint: texto,
+                value: valor!,
+              ),
+            ),
+          );
   }
 }

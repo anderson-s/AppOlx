@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:olx/controller/controller.dart';
+import 'package:olx/view/components/drop_itens.dart';
 
 class TelaInicio extends StatefulWidget {
   const TelaInicio({super.key});
@@ -11,7 +12,8 @@ class TelaInicio extends StatefulWidget {
 
 class _TelaInicioState extends State<TelaInicio> {
   List<String> itensMenu = ["Menu 1", "Menu 2"];
-
+  String dropdownValueEstados = "null";
+  String dropdownValueCategoria = "Categoria";
   Future<void> verLogin() async {
     User? usuarioLogado = FirebaseAuth.instance.currentUser;
     if (usuarioLogado != null) {
@@ -69,8 +71,32 @@ class _TelaInicioState extends State<TelaInicio> {
           ),
         ],
       ),
-      body: Container(
-        child: const Text("Anúncios"),
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                  child: ConfiguracoesItensDrop().retornarDropEstados(
+                      (String? value) {
+                setState(() {
+                  dropdownValueEstados = value!;
+                });
+              }, (p0) => null, 1, dropdownValueEstados)),
+              Container(
+                color: Colors.grey[200],
+                width: 2,
+                height: 60,
+              ),
+              Expanded(
+                  child: ConfiguracoesItensDrop().retornarDropCategorias(
+                      (p0) => null, 1, dropdownValueCategoria, (String? value) {
+                setState(() {
+                  dropdownValueCategoria = value!;
+                });
+              }))
+            ],
+          )
+        ],
       ),
     );
   }
