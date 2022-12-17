@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:olx/controller/controller.dart';
 import 'package:olx/view/components/input_textformfield.dart';
 
@@ -34,7 +33,11 @@ class _TelaLoginState extends State<TelaLogin> {
           popUp("");
           try {
             await Controller().logar(_email.text, _senha.text).then(
-                (value) => Navigator.pushNamed(context, "/anuncios_publicos"));
+                  (value) => Navigator.pushReplacementNamed(
+                    context,
+                    "/anuncios_publicos",
+                  ),
+                );
             setState(() {
               carregar = false;
             });
@@ -201,6 +204,9 @@ class _TelaLoginState extends State<TelaLogin> {
                             child: TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
+                                setState(() {
+                                  carregar = true;
+                                });
                               },
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(

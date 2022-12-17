@@ -69,6 +69,7 @@ class _TelaInicioState extends State<TelaInicio> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("OLX"),
+        automaticallyImplyLeading: false, 
         actions: [
           PopupMenuButton(
             itemBuilder: (context) {
