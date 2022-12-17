@@ -16,6 +16,8 @@ class Rotas {
         return MaterialPageRoute(builder: (_) => const TelaAnuncios());
       case "/novo_anuncio":
         return MaterialPageRoute(builder: (_) => const TelaNovoAnuncio());
+      case "/anuncios_publicos":
+        return MaterialPageRoute(builder: (_) => const TelaInicio());
       default:
         return _errorRota();
     }

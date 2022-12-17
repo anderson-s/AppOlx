@@ -1,7 +1,12 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:olx/controller/controller.dart';
+import 'package:olx/model/anuncio.dart';
 import 'package:olx/view/components/drop_itens.dart';
+import 'package:olx/view/components/itens_anuncios.dart';
 
 class TelaInicio extends StatefulWidget {
   const TelaInicio({super.key});
@@ -27,6 +32,14 @@ class _TelaInicioState extends State<TelaInicio> {
     }
   }
 
+  final _controller = StreamController<QuerySnapshot>.broadcast();
+  carregar() async {
+    Stream<QuerySnapshot> stream = await Controller().carregarAnuncio(0);
+    stream.listen((dados) {
+      _controller.add(dados);
+    });
+  }
+
   _escolha(String item) {
     switch (item) {
       case "Meus anúncios":
@@ -47,6 +60,7 @@ class _TelaInicioState extends State<TelaInicio> {
   @override
   void initState() {
     verLogin();
+    carregar();
     super.initState();
   }
 
@@ -95,6 +109,67 @@ class _TelaInicioState extends State<TelaInicio> {
                 });
               }))
             ],
+          ),
+          StreamBuilder(
+            stream: _controller.stream,
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                  return Center(
+                    child: Column(
+                      children: const [
+                        Text("Carregando anúncios"),
+                        CircularProgressIndicator()
+                      ],
+                    ),
+                  );
+                case ConnectionState.active:
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                     return Container(
+                      padding: const EdgeInsets.all(25),
+                      child: const Text(
+                        "Erro ao tentar carregar os anúncios :(",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasData) {
+                    QuerySnapshot querySnapshot = snapshot.data!;
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: querySnapshot.docs.length,
+                        itemBuilder: (_, index) {
+                          List<DocumentSnapshot> anuncios =
+                              querySnapshot.docs.toList();
+                          DocumentSnapshot docsSnapshot = anuncios[index];
+                          Anuncio anuncio = Anuncio.carregarDados(docsSnapshot);
+                          return ItensAnuncios(anuncio: anuncio);
+                        },
+                      ),
+                    );
+                  } else {
+                    return Container(
+                      padding: const EdgeInsets.all(25),
+                      child: const Text(
+                        "Nenhum anúncio! :( ",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  }
+
+                // if (querySnapshot.docs.isEmpty) {
+
+                // }
+              }
+              // return Container();
+            },
           )
         ],
       ),

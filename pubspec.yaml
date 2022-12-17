@@ -43,6 +43,7 @@ dependencies:
   brasil_fields: ^1.6.0
   image_picker: ^0.8.6
   validadores: ^1.0.5
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:

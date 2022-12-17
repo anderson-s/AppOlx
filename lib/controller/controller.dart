@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:olx/model/utils/exceptions_login.dart';
 
 class Controller {
   Future<void> cadastrar(String email, String senha) async {
@@ -14,9 +15,14 @@ class Controller {
 
   Future<void> logar(String email, String senha) async {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-    firebaseAuth
-        .signInWithEmailAndPassword(email: email, password: senha)
-        .then((value) {});
+    try {
+      await firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: senha);
+    } on FirebaseAuthException catch (error) {
+      throw ExceptionsLogin(exception: error.code);
+    } catch (error) {
+      print(error);
+    }
   }
 
   Future<void> deslogar() async {
@@ -60,15 +66,17 @@ class Controller {
     );
   }
 
-  Future<Stream<QuerySnapshot<Object?>>> carregarAnuncio() async {
+  Future<Stream<QuerySnapshot<Object?>>> carregarAnuncio(int i) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User user = auth.currentUser!;
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Stream<QuerySnapshot> stream = db
-        .collection("meus_anuncios")
-        .doc(user.uid)
-        .collection("anuncios")
-        .snapshots();
+    Stream<QuerySnapshot> stream = i == 0
+        ? db
+            .collection("meus_anuncios")
+            .doc(user.uid)
+            .collection("anuncios")
+            .snapshots()
+        : db.collection("anuncios").snapshots();
     return stream;
   }
 

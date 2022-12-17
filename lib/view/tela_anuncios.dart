@@ -24,7 +24,7 @@ class _TelaAnunciosState extends State<TelaAnuncios> {
     ),
   );
   carregar() async {
-    Stream<QuerySnapshot> stream = await Controller().carregarAnuncio();
+    Stream<QuerySnapshot> stream = await Controller().carregarAnuncio(1);
     stream.listen((dados) {
       _controller.add(dados);
     });

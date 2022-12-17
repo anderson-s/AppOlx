@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:olx/firebase_options.dart';
 import 'package:olx/model/utils/rotas.dart';
 import 'package:olx/view/tela_inicio.dart';
+import 'package:olx/view/tela_login.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +16,7 @@ void main(List<String> args) async {
       title: "OLX",
       initialRoute: "/",
       debugShowCheckedModeBanner: false,
-      home: const TelaInicio(),
+      home: const TelaLogin(),
       onGenerateRoute: Rotas.gerar,
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
