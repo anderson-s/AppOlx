@@ -46,10 +46,8 @@ class _TelaInicioState extends State<TelaInicio> {
         Navigator.pushNamed(context, "/meus_anuncios");
         break;
       case "Deslogar":
-        Controller()
-            .deslogar()
-            .then((value) => Navigator.pushNamed(context, "login"));
-
+        Navigator.pushNamed(context, "login");
+        Controller().deslogar();
         break;
       case "Entrar / Cadastrar":
         Navigator.pushNamed(context, "login");
@@ -69,7 +67,7 @@ class _TelaInicioState extends State<TelaInicio> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("OLX"),
-        automaticallyImplyLeading: false, 
+        automaticallyImplyLeading: false,
         actions: [
           PopupMenuButton(
             itemBuilder: (context) {
@@ -128,7 +126,7 @@ class _TelaInicioState extends State<TelaInicio> {
                 case ConnectionState.active:
                 case ConnectionState.done:
                   if (snapshot.hasError) {
-                     return Container(
+                    return Container(
                       padding: const EdgeInsets.all(25),
                       child: const Text(
                         "Erro ao tentar carregar os anúncios :(",

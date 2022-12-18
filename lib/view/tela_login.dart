@@ -22,12 +22,20 @@ class _TelaLoginState extends State<TelaLogin> {
     if (_email.text.isNotEmpty && _email.text.contains("@")) {
       if (_senha.text.isNotEmpty && _senha.text.length > 6) {
         if (_valor) {
+          popUp("");
           try {
             await Controller().cadastrar(_email.text, _senha.text).then(
                   (value) => Navigator.pushNamed(context, "/"),
                 );
+            setState(() {
+              carregar = false;
+            });
           } catch (error) {
-            return error;
+            Navigator.pop(context);
+            popUp(error.toString());
+            setState(() {
+              carregar = false;
+            });
           }
         } else {
           popUp("");
@@ -184,7 +192,7 @@ class _TelaLoginState extends State<TelaLogin> {
                             child: Center(
                               child: AutoSizeText(
                                 message,
-                                maxLines: 2,
+                                maxLines: 3,
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   inherit: false,

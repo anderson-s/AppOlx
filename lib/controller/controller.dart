@@ -3,31 +3,33 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:olx/model/utils/exceptions_cadastro.dart';
 import 'package:olx/model/utils/exceptions_login.dart';
 
 class Controller {
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   Future<void> cadastrar(String email, String senha) async {
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-    firebaseAuth
-        .createUserWithEmailAndPassword(email: email, password: senha)
-        .then((value) {});
+    try {
+      await firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: senha);
+    } on FirebaseAuthException catch (error) {
+      throw ExceptionsCadastro(exception: error.code);
+    } catch (error) {
+      return;
+    }
   }
 
   Future<void> logar(String email, String senha) async {
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     try {
       await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: senha);
     } on FirebaseAuthException catch (error) {
       throw ExceptionsLogin(exception: error.code);
-    } catch (error) {
-      print(error);
     }
   }
 
   Future<void> deslogar() async {
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-    firebaseAuth.signOut();
+    await firebaseAuth.signOut();
   }
 
   Future<List<String>> uploadImagem(
@@ -48,8 +50,7 @@ class Controller {
   }
 
   Future<void> salvarDadosAnuncios(Map<String, dynamic> map) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User user = auth.currentUser!;
+    User user = firebaseAuth.currentUser!;
     FirebaseFirestore db = FirebaseFirestore.instance;
     //Meus Anuncios
     db
@@ -67,8 +68,7 @@ class Controller {
   }
 
   Future<Stream<QuerySnapshot<Object?>>> carregarAnuncio(int i) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User user = auth.currentUser!;
+    User user = firebaseAuth.currentUser!;
     FirebaseFirestore db = FirebaseFirestore.instance;
     Stream<QuerySnapshot> stream = i == 0
         ? db
@@ -81,8 +81,7 @@ class Controller {
   }
 
   Future removerAnuncio(String idAnuncio) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User user = auth.currentUser!;
+    User user = firebaseAuth.currentUser!;
     FirebaseFirestore db = FirebaseFirestore.instance;
     db
         .collection("meus_anuncios")
