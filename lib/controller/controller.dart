@@ -19,6 +19,18 @@ class Controller {
     }
   }
 
+  Future<int> verlogin() async {
+    User? user = firebaseAuth.currentUser;
+    if (user!.uid.isEmpty) {
+     
+      return 0;
+    } else {
+    
+      return 1;
+      
+    }
+  }
+
   Future<void> logar(String email, String senha) async {
     try {
       await firebaseAuth.signInWithEmailAndPassword(
@@ -29,7 +41,10 @@ class Controller {
   }
 
   Future<void> deslogar() async {
-    await firebaseAuth.signOut();
+    await firebaseAuth
+        .signOut()
+        .then((value) => print("saiu"))
+        .catchError((onError) => print(onError));
   }
 
   Future<List<String>> uploadImagem(
@@ -70,14 +85,20 @@ class Controller {
   Future<Stream<QuerySnapshot<Object?>>> carregarAnuncio(int i) async {
     User user = firebaseAuth.currentUser!;
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Stream<QuerySnapshot> stream = i == 0
-        ? db
+     Stream<QuerySnapshot>? stream;
+    if (user.uid.isNotEmpty) {
+      if (i == 0) {
+        stream = db
             .collection("meus_anuncios")
             .doc(user.uid)
             .collection("anuncios")
-            .snapshots()
-        : db.collection("anuncios").snapshots();
-    return stream;
+            .snapshots();
+      } else {
+        stream = db.collection("anuncios").snapshots();
+      }
+    }
+
+    return stream!;
   }
 
   Future removerAnuncio(String idAnuncio) async {

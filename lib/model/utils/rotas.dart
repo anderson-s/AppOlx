@@ -10,7 +10,7 @@ class Rotas {
     switch (settings.name) {
       case "/":
         return MaterialPageRoute(builder: (_) => const TelaInicio());
-      case "login":
+      case "/login":
         return MaterialPageRoute(builder: (_) => const TelaLogin());
       case "/meus_anuncios":
         return MaterialPageRoute(builder: (_) => const TelaAnuncios());

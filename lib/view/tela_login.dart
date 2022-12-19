@@ -18,6 +18,11 @@ class _TelaLoginState extends State<TelaLogin> {
   String botao = "Entrar";
   bool _valor = false;
 
+  // _verlogin() async{
+  //   int valor = await Controller().verlogin();
+    
+  // }
+
   _validar() async {
     if (_email.text.isNotEmpty && _email.text.contains("@")) {
       if (_senha.text.isNotEmpty && _senha.text.length > 6) {
@@ -68,11 +73,17 @@ class _TelaLoginState extends State<TelaLogin> {
       });
     }
   }
+  @override
+  void initState() {
+    
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(""),
         // backgroundColor: Colors.purple,
       ),

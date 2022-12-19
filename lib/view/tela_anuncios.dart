@@ -15,6 +15,7 @@ class TelaAnuncios extends StatefulWidget {
 
 class _TelaAnunciosState extends State<TelaAnuncios> {
   final _controller = StreamController<QuerySnapshot>.broadcast();
+  Stream<QuerySnapshot>? stream;
   final _carregar = Center(
     child: Column(
       children: const [
@@ -24,10 +25,13 @@ class _TelaAnunciosState extends State<TelaAnuncios> {
     ),
   );
   carregar() async {
-    Stream<QuerySnapshot> stream = await Controller().carregarAnuncio(1);
-    stream.listen((dados) {
-      _controller.add(dados);
-    });
+    stream = await Controller().carregarAnuncio(0);
+    stream!.listen(
+      (dados) {
+        _controller.add(dados);
+      },
+      onError: (error) => print("O error é: $error"),
+    );
   }
 
   @override
