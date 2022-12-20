@@ -24,6 +24,7 @@ class _TelaAnunciosState extends State<TelaAnuncios> {
       ],
     ),
   );
+
   carregar() async {
     stream = await Controller().carregarAnuncio(0);
     stream!.listen(
@@ -38,6 +39,12 @@ class _TelaAnunciosState extends State<TelaAnuncios> {
   void initState() {
     carregar();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    carregar();
+    super.dispose();
   }
 
   @override

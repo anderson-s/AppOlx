@@ -19,15 +19,12 @@ class Controller {
     }
   }
 
-  Future<int> verlogin() async {
+  Future<int?> verlogin() async {
     User? user = firebaseAuth.currentUser;
-    if (user!.uid.isEmpty) {
-     
+    if(user?.uid == null){
+      return null;
+    }else{
       return 0;
-    } else {
-    
-      return 1;
-      
     }
   }
 
@@ -85,7 +82,7 @@ class Controller {
   Future<Stream<QuerySnapshot<Object?>>> carregarAnuncio(int i) async {
     User user = firebaseAuth.currentUser!;
     FirebaseFirestore db = FirebaseFirestore.instance;
-     Stream<QuerySnapshot>? stream;
+    Stream<QuerySnapshot>? stream;
     if (user.uid.isNotEmpty) {
       if (i == 0) {
         stream = db

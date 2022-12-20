@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:olx/controller/controller.dart';
 import 'package:olx/view/components/input_textformfield.dart';
+import 'package:olx/view/tela_inicio.dart';
 
 class TelaLogin extends StatefulWidget {
   const TelaLogin({super.key});
@@ -18,10 +19,19 @@ class _TelaLoginState extends State<TelaLogin> {
   String botao = "Entrar";
   bool _valor = false;
 
-  // _verlogin() async{
-  //   int valor = await Controller().verlogin();
+  _verlogin() async {
     
-  // }
+    int? valor = await Controller().verlogin();
+    if (valor == 0) {
+      Future(() {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const TelaInicio(),
+            ));
+      });
+    }
+  }
 
   _validar() async {
     if (_email.text.isNotEmpty && _email.text.contains("@")) {
@@ -73,9 +83,10 @@ class _TelaLoginState extends State<TelaLogin> {
       });
     }
   }
+
   @override
   void initState() {
-    
+    _verlogin();
     super.initState();
   }
 
