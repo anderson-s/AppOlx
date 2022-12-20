@@ -104,7 +104,13 @@ class _TelaAnunciosState extends State<TelaAnuncios> {
                                       ),
                                     ),
                                   ),
-                                  TextButton(
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                        Colors.red,
+                                      ),
+                                    ),
                                     onPressed: () {
                                       Controller().removerAnuncio(anuncio.id);
                                       Navigator.of(context).pop();
@@ -112,7 +118,7 @@ class _TelaAnunciosState extends State<TelaAnuncios> {
                                     child: const Text(
                                       "Remover",
                                       style: TextStyle(
-                                        color: Colors.red,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
