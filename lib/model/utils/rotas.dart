@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:olx/model/anuncio.dart';
+import 'package:olx/view/components/detalhes.dart';
 import 'package:olx/view/tela_anuncios.dart';
 import 'package:olx/view/tela_inicio.dart';
 import 'package:olx/view/tela_login.dart';
@@ -18,6 +20,7 @@ class Rotas {
         return MaterialPageRoute(builder: (_) => const TelaNovoAnuncio());
       case "/anuncios_publicos":
         return MaterialPageRoute(builder: (_) => const TelaInicio());
+     
       default:
         return _errorRota();
     }

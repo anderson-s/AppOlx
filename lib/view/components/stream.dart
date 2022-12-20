@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:olx/model/anuncio.dart';
+import 'package:olx/view/components/detalhes.dart';
 import 'package:olx/view/components/itens_anuncios.dart';
 
 class MyWidget extends StatefulWidget {
@@ -53,7 +54,18 @@ class _MyWidgetState extends State<MyWidget> {
                         querySnapshot.docs.toList();
                     DocumentSnapshot docsSnapshot = anuncios[index];
                     Anuncio anuncio = Anuncio.carregarDados(docsSnapshot);
-                    return ItensAnuncios(anuncio: anuncio);
+                    return ItensAnuncios(
+                      anuncio: anuncio,
+                      onTapItem: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DetalhesAnuncio(anuncio: anuncio),
+                          ),
+                        );
+                      },
+                    );
                   },
                 ),
               );
