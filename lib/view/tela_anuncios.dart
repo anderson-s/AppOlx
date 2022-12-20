@@ -53,11 +53,13 @@ class _TelaAnunciosState extends State<TelaAnuncios> {
       appBar: AppBar(
         title: const Text("Meus anúncios"),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.pushNamed(context, "/novo_anuncio");
         },
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: const Text("Adicionar"),
       ),
       body: StreamBuilder(
         stream: _controller.stream,
