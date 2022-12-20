@@ -122,15 +122,21 @@ class _TelaAnunciosState extends State<TelaAnuncios> {
                   },
                 );
               } else {
-                return Container(
-                  padding: const EdgeInsets.all(25),
-                  child: const Text(
-                    "Nenhum anúncio! :( ",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.all(25),
+                      child: Text(
+                        "Nenhum anúncio! :( ",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 );
               }
           }

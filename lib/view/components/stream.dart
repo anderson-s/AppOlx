@@ -69,10 +69,6 @@ class _MyWidgetState extends State<MyWidget> {
                 ),
               );
             }
-
-          // if (querySnapshot.docs.isEmpty) {
-
-          // }
         }
         // return Container();
       },
