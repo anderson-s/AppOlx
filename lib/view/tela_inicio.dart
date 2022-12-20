@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:olx/controller/controller.dart';
 import 'package:olx/view/components/drop_itens.dart';
@@ -17,14 +16,11 @@ class TelaInicio extends StatefulWidget {
 }
 
 class _TelaInicioState extends State<TelaInicio> {
-  List<String> itensMenu =  ["Meus anúncios", "Deslogar"];
+  List<String> itensMenu = ["Meus anúncios", "Deslogar"];
   String dropdownValueEstados = "null";
   int valor = 0;
   Stream<QuerySnapshot>? stream;
   String dropdownValueCategoria = "Categoria";
-
-
-
 
   final _controller = StreamController<QuerySnapshot>.broadcast();
   carregar() async {
@@ -40,6 +36,14 @@ class _TelaInicioState extends State<TelaInicio> {
         ),
       ),
     );
+  }
+
+  filtrar() async {
+    stream = await Controller()
+        .filtrarAnuncios(dropdownValueEstados, dropdownValueCategoria);
+    stream!.listen((event) {
+      _controller.add(event);
+    });
   }
 
   _escolha(String item) async {
@@ -63,8 +67,6 @@ class _TelaInicioState extends State<TelaInicio> {
 
   @override
   void initState() {
-    
-
     carregar();
     super.initState();
   }
@@ -105,9 +107,12 @@ class _TelaInicioState extends State<TelaInicio> {
               Expanded(
                   child: ConfiguracoesItensDrop().retornarDropEstados(
                       (String? value) {
-                setState(() {
-                  dropdownValueEstados = value!;
-                });
+                setState(
+                  () {
+                    dropdownValueEstados = value!;
+                    filtrar();
+                  },
+                );
               }, (p0) => null, 1, dropdownValueEstados)),
               Container(
                 color: Colors.grey[200],
@@ -115,12 +120,20 @@ class _TelaInicioState extends State<TelaInicio> {
                 height: 60,
               ),
               Expanded(
-                  child: ConfiguracoesItensDrop().retornarDropCategorias(
-                      (p0) => null, 1, dropdownValueCategoria, (String? value) {
-                setState(() {
-                  dropdownValueCategoria = value!;
-                });
-              }))
+                child: ConfiguracoesItensDrop().retornarDropCategorias(
+                  (p0) => null,
+                  1,
+                  dropdownValueCategoria,
+                  (String? value) {
+                    setState(
+                      () {
+                        dropdownValueCategoria = value!;
+                        filtrar();
+                      },
+                    );
+                  },
+                ),
+              )
             ],
           ),
           if (valor == 0) MyWidget(controller: _controller.stream),

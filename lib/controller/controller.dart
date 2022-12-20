@@ -21,9 +21,9 @@ class Controller {
 
   Future<int?> verlogin() async {
     User? user = firebaseAuth.currentUser;
-    if(user?.uid == null){
+    if (user?.uid == null) {
       return null;
-    }else{
+    } else {
       return 0;
     }
   }
@@ -96,6 +96,22 @@ class Controller {
     }
 
     return stream!;
+  }
+
+  Future<Stream<QuerySnapshot<Object?>>> filtrarAnuncios(
+      String estado, String categoria) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Query query = db.collection("anuncios");
+
+    if (estado != "null") {
+      query = query.where("estado", isEqualTo: estado);
+    }
+    if (categoria != "Categoria") {
+      query = query.where("categoria", isEqualTo: categoria);
+    }
+
+    Stream<QuerySnapshot> stream = query.snapshots();
+    return stream;
   }
 
   Future removerAnuncio(String idAnuncio) async {

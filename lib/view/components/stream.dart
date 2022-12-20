@@ -41,8 +41,10 @@ class _MyWidgetState extends State<MyWidget> {
                   ),
                 ),
               );
-            } else if (snapshot.hasData) {
-              QuerySnapshot querySnapshot = snapshot.data!;
+            }
+
+            QuerySnapshot? querySnapshot = snapshot.data;
+            if (querySnapshot!.docs.isNotEmpty) {
               return Expanded(
                 child: ListView.builder(
                   itemCount: querySnapshot.docs.length,

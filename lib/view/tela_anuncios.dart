@@ -71,54 +71,68 @@ class _TelaAnunciosState extends State<TelaAnuncios> {
               if (snapshot.hasError) {
                 return const Text("Erro ao carregar os dados!");
               }
-              QuerySnapshot<Object?> querySnapshot = snapshot.data!;
-              return ListView.builder(
-                itemCount: querySnapshot.docs.length,
-                itemBuilder: (_, index) {
-                  List<DocumentSnapshot> anuncios = querySnapshot.docs.toList();
-                  DocumentSnapshot docsSnapshot = anuncios[index];
-                  Anuncio anuncio = Anuncio.carregarDados(docsSnapshot);
-                  return ItensAnuncios(
-                    anuncio: anuncio,
-                    onPressedRemover: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text("Confirmar"),
-                              content: const Text(
-                                  "Deseja realmente excluir o anúncio?"),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text(
-                                    "Cancelar",
-                                    style: TextStyle(
-                                      color: Colors.green,
+              QuerySnapshot? querySnapshot = snapshot.data;
+              if (querySnapshot!.docs.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: querySnapshot.docs.length,
+                  itemBuilder: (_, index) {
+                    List<DocumentSnapshot> anuncios =
+                        querySnapshot.docs.toList();
+                    DocumentSnapshot docsSnapshot = anuncios[index];
+                    Anuncio anuncio = Anuncio.carregarDados(docsSnapshot);
+                    return ItensAnuncios(
+                      anuncio: anuncio,
+                      onPressedRemover: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text("Confirmar"),
+                                content: const Text(
+                                    "Deseja realmente excluir o anúncio?"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text(
+                                      "Cancelar",
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Controller().removerAnuncio(anuncio.id);
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text(
-                                    "Remover",
-                                    style: TextStyle(
-                                      color: Colors.red,
+                                  TextButton(
+                                    onPressed: () {
+                                      Controller().removerAnuncio(anuncio.id);
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text(
+                                      "Remover",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            );
-                          });
-                    },
-                  );
-                },
-              );
+                                ],
+                              );
+                            });
+                      },
+                    );
+                  },
+                );
+              } else {
+                return Container(
+                  padding: const EdgeInsets.all(25),
+                  child: const Text(
+                    "Nenhum anúncio! :( ",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
+              }
           }
         },
       ),
